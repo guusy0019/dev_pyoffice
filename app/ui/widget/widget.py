@@ -1,5 +1,7 @@
 import customtkinter
 
+import app.config.constants as constants
+
 
 class CustomButton(customtkinter.CTkButton):
     def __init__(self, master, text, command, image=None, anchor="center"):
@@ -12,9 +14,9 @@ class CustomButton(customtkinter.CTkButton):
             corner_radius=0,
             height=40,
             border_spacing=10,
-            fg_color="transparent",
-            text_color=("gray10", "gray90"),
-            hover_color=("gray70", "gray30"),
+            fg_color=constants.fg_color,
+            text_color=constants.text_color,
+            hover_color=constants.hover_color,
         )
 
 

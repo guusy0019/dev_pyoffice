@@ -3,8 +3,8 @@ import os
 import app.config.settings as settings
 from PIL import Image
 from app.ui.page.home_page import HomePage
-from app.ui.page.second_page import SecondPage
-from app.ui.page.third_page import ThirdPage
+from app.ui.page.launcher_page import LauncherPage
+from app.ui.page.todo_page import ThirdPage
 from app.ui.widget.widget import CustomButton
 
 
@@ -12,8 +12,9 @@ class AppLayout(customtkinter.CTk):
     def __init__(self, route_handler):
         super().__init__()
 
+        self.route_handler = route_handler
         self.title("pyfile App!!")
-        self.geometry("700x450")
+        self.geometry("900x600")
 
         # Set grid layout 1x2
         self.grid_rowconfigure(0, weight=1)
@@ -31,7 +32,7 @@ class AppLayout(customtkinter.CTk):
 
         # Create instances of each page
         self.home_frame = HomePage(self, self.large_test_image, self.image_icon_image)
-        self.second_frame = SecondPage(self)
+        self.second_frame = LauncherPage(self)
         self.third_frame = ThirdPage(self)
 
         # Create navigation frame
@@ -41,8 +42,8 @@ class AppLayout(customtkinter.CTk):
 
         self.home_button = CustomButton(
             self.navigation_frame,
-            text="Home",
-            command=lambda: route_handler("home"),
+            text="ホームページ!!",
+            command=lambda: self.route_handler("home"),
             image=None,
             anchor="w",
         )
@@ -50,8 +51,8 @@ class AppLayout(customtkinter.CTk):
 
         self.frame_2_button = CustomButton(
             self.navigation_frame,
-            text="Frame 2",
-            command=lambda: route_handler("frame_2"),
+            text="ランチャーAPP!!",
+            command=lambda: self.route_handler("frame_2"),
             image=None,
             anchor="w",
         )
@@ -59,8 +60,8 @@ class AppLayout(customtkinter.CTk):
 
         self.frame_3_button = CustomButton(
             self.navigation_frame,
-            text="Frame 3",
-            command=lambda: route_handler("frame_3"),
+            text="TODO APP!!",
+            command=lambda: self.route_handler("frame_3"),
             image=None,
             anchor="w",
         )

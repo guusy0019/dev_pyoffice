@@ -1,10 +1,11 @@
 import os
+import platform
 
 # プロジェクトのルートディレクトリ
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-IMAGE_PATH = os.path.join(BASE_DIR, "assets\\images")
-
-LANGUAGE_CODE = "ja"
-
-TIME_ZONE = "Asia/Tokyo"
+# OSに基づいた画像パスの設定
+if platform.system() == "Windows":
+    IMAGE_PATH = os.path.join(BASE_DIR, "assets\\images")
+else:
+    IMAGE_PATH = os.path.join(BASE_DIR, "assets/images")
