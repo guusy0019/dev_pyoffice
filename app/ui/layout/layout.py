@@ -42,7 +42,7 @@ class AppLayout(customtkinter.CTk):
 
         self.home_button = CustomButton(
             self.navigation_frame,
-            text="ホームページ!!",
+            text="ホームページ",
             command=lambda: self.route_handler("home"),
             image=None,
             anchor="w",
@@ -51,7 +51,7 @@ class AppLayout(customtkinter.CTk):
 
         self.frame_2_button = CustomButton(
             self.navigation_frame,
-            text="ランチャーAPP!!",
+            text="ランチャーAPP",
             command=lambda: self.route_handler("frame_2"),
             image=None,
             anchor="w",
@@ -60,7 +60,7 @@ class AppLayout(customtkinter.CTk):
 
         self.frame_3_button = CustomButton(
             self.navigation_frame,
-            text="TODO APP!!",
+            text="TODO APP",
             command=lambda: self.route_handler("frame_3"),
             image=None,
             anchor="w",
@@ -73,6 +73,14 @@ class AppLayout(customtkinter.CTk):
             command=self.change_appearance_mode_event,
         )
         self.appearance_mode_menu.grid(row=6, column=0, padx=20, pady=20, sticky="s")
+
+        self.scaling_optionemenu = customtkinter.CTkOptionMenu(
+            self.navigation_frame,
+            values=["80%", "90%", "100%", "110%", "120%"],
+            command=self.change_scaling_event,
+        )
+        self.scaling_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 20))
+        self.scaling_optionemenu.set("100%")
 
     def change_appearance_mode_event(self, new_appearance_mode):
         customtkinter.set_appearance_mode(new_appearance_mode)
@@ -88,3 +96,7 @@ class AppLayout(customtkinter.CTk):
         self.frame_3_button.configure(
             fg_color=("gray75", "gray25") if name == "frame_3" else "transparent"
         )
+
+    def change_scaling_event(self, new_scaling: str):
+        new_scaling_float = int(new_scaling.replace("%", "")) / 100
+        customtkinter.set_widget_scaling(new_scaling_float)
