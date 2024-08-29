@@ -1,5 +1,7 @@
-import customtkinter
 import os
+
+import customtkinter
+from PIL import Image
 from app.config.settings import (
     IMAGE_PATH,
     TEXT_COLOR,
@@ -7,23 +9,17 @@ from app.config.settings import (
     FG_COLOR,
     FONTS,
 )
-from PIL import Image
+from app.ui.layout._base_ctk_layout import BaseCtkLayout
+
 from app.ui.page.home_page import HomePage
 from app.ui.page.launcher_page import LauncherPage
 from app.ui.page.todo_page import ThirdPage
 
 
-class AppLayout(customtkinter.CTk):
+class AppLayout(BaseCtkLayout):
     def __init__(self, route_handler):
         super().__init__()
-
         self.route_handler = route_handler
-        self.title("pyoffice")
-        self.geometry("900x600")
-
-        # Set grid layout 1x2
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=1)
 
         # Load images
         image_path = IMAGE_PATH
