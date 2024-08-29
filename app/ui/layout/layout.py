@@ -1,11 +1,16 @@
 import customtkinter
 import os
-import app.config.settings as settings
+from app.config.settings import (
+    IMAGE_PATH,
+    TEXT_COLOR,
+    HOVER_COLOR,
+    FG_COLOR,
+    FONTS,
+)
 from PIL import Image
 from app.ui.page.home_page import HomePage
 from app.ui.page.launcher_page import LauncherPage
 from app.ui.page.todo_page import ThirdPage
-from app.ui.widget.widget import CustomButton
 
 
 class AppLayout(customtkinter.CTk):
@@ -13,7 +18,7 @@ class AppLayout(customtkinter.CTk):
         super().__init__()
 
         self.route_handler = route_handler
-        self.title("pyfile App!!")
+        self.title("pyoffice")
         self.geometry("900x600")
 
         # Set grid layout 1x2
@@ -21,7 +26,7 @@ class AppLayout(customtkinter.CTk):
         self.grid_columnconfigure(1, weight=1)
 
         # Load images
-        image_path = settings.IMAGE_PATH
+        image_path = IMAGE_PATH
         self.large_test_image = customtkinter.CTkImage(
             Image.open(os.path.join(image_path, "large_test_image.png")),
             size=(500, 150),
@@ -40,27 +45,45 @@ class AppLayout(customtkinter.CTk):
         self.navigation_frame.grid(row=0, column=0, sticky="nsew")
         self.navigation_frame.grid_rowconfigure(4, weight=1)
 
-        self.home_button = CustomButton(
+        self.home_button = customtkinter.CTkButton(
             self.navigation_frame,
-            text="ホームページ",
-            command=lambda: self.route_handler("home"),
+            corner_radius=0,
+            height=40,
+            border_spacing=10,
+            text="ホーム",
+            fg_color=FG_COLOR,
+            text_color=TEXT_COLOR,
+            hover_color=HOVER_COLOR,
             image=None,
             anchor="w",
+            command=lambda: self.route_handler("home"),
         )
         self.home_button.grid(row=1, column=0, sticky="ew")
 
-        self.frame_2_button = CustomButton(
+        self.frame_2_button = customtkinter.CTkButton(
             self.navigation_frame,
-            text="ランチャーAPP",
+            corner_radius=0,
+            height=40,
+            border_spacing=10,
+            text="ランチャー",
+            fg_color=FG_COLOR,
+            text_color=TEXT_COLOR,
+            hover_color=HOVER_COLOR,
             command=lambda: self.route_handler("frame_2"),
             image=None,
             anchor="w",
         )
         self.frame_2_button.grid(row=2, column=0, sticky="ew")
 
-        self.frame_3_button = CustomButton(
+        self.frame_3_button = customtkinter.CTkButton(
             self.navigation_frame,
-            text="TODO APP",
+            corner_radius=0,
+            height=40,
+            border_spacing=10,
+            text="TODO",
+            fg_color=FG_COLOR,
+            text_color=TEXT_COLOR,
+            hover_color=HOVER_COLOR,
             command=lambda: self.route_handler("frame_3"),
             image=None,
             anchor="w",

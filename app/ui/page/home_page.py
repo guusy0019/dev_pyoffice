@@ -1,5 +1,4 @@
 import customtkinter
-from app.ui.widget.widget import CustomButton
 
 
 class HomePage(customtkinter.CTkFrame):
@@ -12,12 +11,12 @@ class HomePage(customtkinter.CTkFrame):
         )
         self.home_frame_large_image_label.grid(row=0, column=0, padx=20, pady=10)
 
-        self.home_frame_button_1 = CustomButton(
+        self.home_frame_button_1 = customtkinter.CTkButton(
             self, text="", image=image_icon_image, command=lambda: None
         )
         self.home_frame_button_1.grid(row=1, column=0, padx=20, pady=10)
 
-        self.home_frame_button_2 = CustomButton(
+        self.home_frame_button_2 = customtkinter.CTkButton(
             self,
             text="CTkButton",
             image=image_icon_image,
@@ -26,7 +25,7 @@ class HomePage(customtkinter.CTkFrame):
         )
         self.home_frame_button_2.grid(row=2, column=0, padx=20, pady=10)
 
-        self.home_frame_button_3 = CustomButton(
+        self.home_frame_button_3 = customtkinter.CTkButton(
             self,
             text="CTkButton",
             image=image_icon_image,
@@ -35,7 +34,7 @@ class HomePage(customtkinter.CTkFrame):
         )
         self.home_frame_button_3.grid(row=3, column=0, padx=20, pady=10)
 
-        self.home_frame_button_4 = CustomButton(
+        self.home_frame_button_4 = customtkinter.CTkButton(
             self,
             text="CTkButton",
             image=image_icon_image,

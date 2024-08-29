@@ -1,1 +1,1 @@
-pip freeze | Set-Content -Path requirements.txt -Encoding UTF8
+pip freeze | Set-Content -Path ..\..\requirements.txt -Encoding UTF8

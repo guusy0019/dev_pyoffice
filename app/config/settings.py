@@ -10,5 +10,15 @@ if platform.system() == "Windows":
 else:
     IMAGE_PATH = os.path.join(BASE_DIR, "app/assets/images")
 
-# ログファイルの設定
 LOG_FILE_PATH = os.path.join(BASE_DIR, "app\\logs\\app.log")
+
+# ("ライトモード", "ダークモード")
+TEXT_COLOR = ("gray10", "gray90")
+
+HOVER_COLOR = ("gray70", "gray30")
+
+# ボタンの背景色
+FG_COLOR = "transparent"
+
+# ("フォント名", フォントサイズ)
+FONTS = ("meiryo", 15)
