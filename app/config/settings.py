@@ -7,10 +7,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 # OSに基づいた画像パスの設定（いる？）
 if platform.system() == "Windows":
     IMAGE_PATH = os.path.join(BASE_DIR, "app\\assets\\images")
+    LOG_FILE_PATH = os.path.join(BASE_DIR, "app\\logs\\app.log")
 else:
     IMAGE_PATH = os.path.join(BASE_DIR, "app/assets/images")
+    LOG_FILE_PATH = os.path.join(BASE_DIR, "app/logs/app.log")
 
-LOG_FILE_PATH = os.path.join(BASE_DIR, "app\\logs\\app.log")
 
 # ("ライトモード", "ダークモード")
 TEXT_COLOR = ("gray10", "gray90")

@@ -18,21 +18,21 @@ class MenuLayout(tk.Frame):
         self.edit_menu = tk.Menu(self.menu, tearoff=0)
         self.menu.add_cascade(label="Edit", menu=self.edit_menu)
 
-        self.help_menu = tk.Menu(self.menu, tearoff=0)
-        self.menu.add_cascade(label="Help", menu=self.help_menu)
+        self.config = tk.Menu(self.menu, tearoff=0)
+        self.menu.add_cascade(label="設定", menu=self.config)
 
         self.file_menu.add_command(label="New", command=self.new_file)
         self.file_menu.add_command(label="Open", command=self.open_file)
         self.file_menu.add_command(label="Save", command=self.save_file)
         self.file_menu.add_command(label="Save As", command=self.save_as_file)
         self.file_menu.add_separator()
-        self.file_menu.add_command(label="Exit", command=self.exit)
+        self.file_menu.add_command(label="終了", command=self.exit)
 
         self.edit_menu.add_command(label="Cut", command=self.cut)
         self.edit_menu.add_command(label="Copy", command=self.copy)
         self.edit_menu.add_command(label="Paste", command=self.paste)
 
-        self.help_menu.add_command(label="About", command=self.about)
+        self.config.add_command(label="設定", command=self.to_settings)
 
     def new_file(self):
         pass
@@ -58,5 +58,5 @@ class MenuLayout(tk.Frame):
     def paste(self):
         pass
 
-    def about(self):
+    def to_settings(self):
         pass

@@ -14,7 +14,7 @@ class LauncherPage(customtkinter.CTkFrame):
     def setup(self):
 
         kwargs = {
-            "placeholder_text": "実行したいファイルを選択してください",
+            "placeholder_text": "ランチャーに保存する.exeファイルを選択してください",
             "button_text": "ファイルを選択",
             "custom_command": self.button_select_callback,
             "command_button_text": "パスを保存",
@@ -27,9 +27,7 @@ class LauncherPage(customtkinter.CTkFrame):
 
     def button_select_callback(self):
         file_path = self.file_dialog.textbox.get()
-        # print(file_path)
         if os.path.exists(file_path):
             print("File exists")
-            print(file_path)
         else:
             print("File does not exist")

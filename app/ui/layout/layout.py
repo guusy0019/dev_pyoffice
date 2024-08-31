@@ -11,6 +11,9 @@ from app.config.settings import (
 )
 from app.ui.layout._base_ctk_layout import BaseCtkLayout
 
+from app.ui.widget.appearance_mode_widget import AppearanceModeWidget
+from app.ui.widget.scaling_option_widget import ScalingOptionWidget
+
 from app.ui.page.home_page import HomePage
 from app.ui.page.launcher_page import LauncherPage
 from app.ui.page.todo_page import ThirdPage
@@ -22,13 +25,12 @@ class AppLayout(BaseCtkLayout):
         self.route_handler = route_handler
 
         # Load images
-        image_path = IMAGE_PATH
         self.large_test_image = customtkinter.CTkImage(
-            Image.open(os.path.join(image_path, "large_test_image.png")),
+            Image.open(os.path.join(IMAGE_PATH, "large_test_image.png")),
             size=(500, 150),
         )
         self.image_icon_image = customtkinter.CTkImage(
-            Image.open(os.path.join(image_path, "image_icon_light.png")), size=(20, 20)
+            Image.open(os.path.join(IMAGE_PATH, "image_icon_light.png")), size=(20, 20)
         )
 
         # Create instances of each page
@@ -50,7 +52,7 @@ class AppLayout(BaseCtkLayout):
             fg_color=FG_COLOR,
             text_color=TEXT_COLOR,
             hover_color=HOVER_COLOR,
-            image=None,
+            image=self.home_icon,
             anchor="w",
             command=lambda: self.route_handler("home"),
         )
@@ -66,7 +68,7 @@ class AppLayout(BaseCtkLayout):
             text_color=TEXT_COLOR,
             hover_color=HOVER_COLOR,
             command=lambda: self.route_handler("frame_2"),
-            image=None,
+            image=self.launcher_icon,
             anchor="w",
         )
         self.frame_2_button.grid(row=2, column=0, sticky="ew")
@@ -86,36 +88,22 @@ class AppLayout(BaseCtkLayout):
         )
         self.frame_3_button.grid(row=3, column=0, sticky="ew")
 
-        self.appearance_mode_menu = customtkinter.CTkOptionMenu(
-            self.navigation_frame,
-            values=["Light", "Dark", "System"],
-            command=self.change_appearance_mode_event,
-        )
+        # 外観モードのウィジェットの配置
+        self.appearance_mode_menu = AppearanceModeWidget(self.navigation_frame)
         self.appearance_mode_menu.grid(row=6, column=0, padx=20, pady=20, sticky="s")
 
-        self.scaling_optionemenu = customtkinter.CTkOptionMenu(
-            self.navigation_frame,
-            values=["80%", "90%", "100%", "110%", "120%"],
-            command=self.change_scaling_event,
-        )
+        # スケーリングのウィジェットの配置
+        self.scaling_optionemenu = ScalingOptionWidget(self.navigation_frame)
         self.scaling_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 20))
-        self.scaling_optionemenu.set("100%")
-
-    def change_appearance_mode_event(self, new_appearance_mode):
-        customtkinter.set_appearance_mode(new_appearance_mode)
 
     def select_button(self, name):
         """Select the button by name and update the appearance."""
         self.home_button.configure(
-            fg_color=("gray75", "gray25") if name == "home" else "transparent"
+            fg_color=FG_COLOR if name == "home" else "transparent"
         )
         self.frame_2_button.configure(
-            fg_color=("gray75", "gray25") if name == "frame_2" else "transparent"
+            fg_color=FG_COLOR if name == "frame_2" else "transparent"
         )
         self.frame_3_button.configure(
-            fg_color=("gray75", "gray25") if name == "frame_3" else "transparent"
+            fg_color=FG_COLOR if name == "frame_3" else "transparent"
         )
-
-    def change_scaling_event(self, new_scaling: str):
-        new_scaling_float = int(new_scaling.replace("%", "")) / 100
-        customtkinter.set_widget_scaling(new_scaling_float)
