@@ -74,9 +74,10 @@ class FileDialogWidget(customtkinter.CTkFrame):
         readable_file_types = self.kwargs.get(
             "readable_file_types", "*.csv;*.xlsx;*.xls"
         )
+        initial_dir = self.kwargs.get("initial_dir", current_dir)
 
         file_path = filedialog.askopenfilename(
-            filetypes=[(file_name, readable_file_types)], initialdir=current_dir
+            filetypes=[(file_name, readable_file_types)], initialdir=initial_dir
         )
 
         if len(file_path) != 0:

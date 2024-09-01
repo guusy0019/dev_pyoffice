@@ -1,18 +1,18 @@
 import json
 import os
 
-from app.config.settings import BASE_DIR
+from app.config.settings import DATA_PATH
 
 
 class LauncherRepository:
-    save_path = os.path.join(BASE_DIR, "app/assets/data/launcher_app.json")
+    save_path = os.path.join(DATA_PATH, "launcher_app.json")
 
     def save_launch_path(self, *, key: str, launch_app_path: str):
         launch_data = {}
 
-        # 拡張子が.exeかどうかを確認
-        if not launch_app_path.endswith(".exe"):
-            raise ValueError("save_path's Extension must be .exe")
+        # 拡張子がショートカットかどうかを確認
+        if not launch_app_path.endswith(".lnk"):
+            raise ValueError("launcher_save_path's Extension must be .lnk")
 
         if os.path.exists(self.save_path):
             with open(self.save_path, "r") as f:
