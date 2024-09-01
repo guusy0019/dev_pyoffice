@@ -1,22 +1,31 @@
+import win32com.client
 import win32gui
 import win32ui
 import win32con
 import win32api
 from PIL import Image
 
+import tkinter as tk
+from PIL import Image, ImageTk
+
 
 class IconExtractor:
-    def __init__(self):
-        self.ico_x = win32api.GetSystemMetrics(win32con.SM_CXICON)
-        self.ico_y = win32api.GetSystemMetrics(win32con.SM_CYICON)
+    def __init__(self, icon_size=(32, 32)):
+        self.icon_size = icon_size
+        self.ico_x = icon_size[0]
+        self.ico_y = icon_size[1]
 
     def get_icon(self, icon_path):
         try:
+            # ショートカットかどうかを確認し、ショートカットならターゲットを取得
+            if icon_path.lower().endswith(".lnk"):
+                shell = win32com.client.Dispatch("WScript.Shell")
+                shortcut = shell.CreateShortCut(icon_path)
+                icon_path = shortcut.TargetPath
+
             large, small = win32gui.ExtractIconEx(icon_path, 0)
             if not large:
                 raise ValueError(f"アイコンを抽出できませんでした: {icon_path}")
-
-            win32gui.DestroyIcon(small[0])
 
             hdc = win32ui.CreateDCFromHandle(win32gui.GetDC(0))
             hbmp = win32ui.CreateBitmap()
@@ -32,8 +41,18 @@ class IconExtractor:
             )
 
             win32gui.DestroyIcon(large[0])
+            win32gui.DestroyIcon(small[0])
 
             return img
 
         except Exception as e:
             raise RuntimeError(f"アイコンの抽出中にエラーが発生しました: {e}")
+
+    def get_pillow_image(self, icon_path):
+        pil_img = self.get_icon(icon_path)
+        return self.get_tk_image_as_staticmethod(pil_img=pil_img)
+
+    @staticmethod
+    def get_tk_image_as_staticmethod(*, pil_img: Image.Image) -> ImageTk.PhotoImage:
+        """PILオブジェクトをtkinter使えるように変換"""
+        return ImageTk.PhotoImage(pil_img)

@@ -1,10 +1,11 @@
 import os
 import tkinter as tk
+from PIL import Image, ImageTk
 import customtkinter
 
 from app.ui.widget.file_dialog_widget import FileDialogWidget
-from app.ui.utility.exec_shortcut_utility import ShortcutExecutor
-from app.ui.utility.get_shortcut_icon_utility import IconExtractor
+from app.module.utility.exec_shortcut_utility import ShortcutExecutor
+from app.module.utility.get_shortcut_icon_utility import IconExtractor
 
 from app.module.service.launcher_service import LauncherService
 
@@ -31,6 +32,30 @@ class LauncherPage(customtkinter.CTkFrame):
         self.file_dialog = FileDialogWidget(master=self, **kwargs)
         self.file_dialog.grid(row=0, column=0, padx=10, pady=20, sticky="ew")
 
+        self.launcher_list = customtkinter.CTkFrame(
+            self, corner_radius=0, fg_color="transparent"
+        )
+
+        launcher_service = LauncherService()
+        all_launcher_dict: dict[str, str] = launcher_service.get_all_launch_path()
+
+        icon_extractor = IconExtractor()
+        shortcut_executor = ShortcutExecutor()
+        for app_name, app_path in all_launcher_dict.items():
+            icon = icon_extractor.get_icon(app_path)
+            icon = ImageTk.PhotoImage(icon)
+            self.launcher_list = customtkinter.CTkButton(
+                master=self.launcher_list,
+                text=app_name,
+                image=icon,
+                compound="left",
+                command=lambda app_path=app_path: shortcut_executor.execute_shortcut(
+                    shortcut_path=app_path
+                ),
+            )
+
+        self.launcher_list.grid(row=1, column=0, padx=10, pady=20, sticky="ew")
+
     def button_select_callback(self):
         file_path = self.file_dialog.textbox.get()
         # file_pathで取得した最後の"/"以降の文字列を取得
@@ -44,15 +69,6 @@ class LauncherPage(customtkinter.CTkFrame):
             self.file_dialog.textbox.delete(0, tk.END)
         else:
             raise FileNotFoundError(f"{file_path} not found")
-
-    def _exec_shortcut(self, shortcut_path: str):
-        shortcut_executer = ShortcutExecutor()
-        shortcut_executer.execute_shortcut(shortcut_path)
-
-    def _get_all_launcher_list(self):
-        """ランチャーのリストを全件取得"""
-        launcher_service = LauncherService()
-        return launcher_service.get_all_launch_path()
 
     def _delete_launcher(self, key: str):
         """指定したランチャーを削除して、残りのランチャーを返す"""
