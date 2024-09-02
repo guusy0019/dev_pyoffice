@@ -5,6 +5,7 @@ importlib_metadata==8.4.0
 packaging==24.1
 pefile==2023.2.7
 pillow==10.4.0
+psutil==6.0.0
 pyinstaller==6.10.0
 pyinstaller-hooks-contrib==2024.8
 pywin32==306

@@ -50,9 +50,5 @@ class IconExtractor:
 
     def get_pillow_image(self, icon_path):
         pil_img = self.get_icon(icon_path)
-        return self.get_tk_image_as_staticmethod(pil_img=pil_img)
-
-    @staticmethod
-    def get_tk_image_as_staticmethod(*, pil_img: Image.Image) -> ImageTk.PhotoImage:
-        """PILオブジェクトをtkinter使えるように変換"""
-        return ImageTk.PhotoImage(pil_img)
+        # pil_img example => <PIL.Image.Image image mode=RGBA size=64x64 at 0x1A26FB3CFA0>
+        return pil_img

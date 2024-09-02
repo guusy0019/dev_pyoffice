@@ -3,22 +3,31 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import customtkinter
 
+from app.config.settings import IMAGE_PATH
+
 from app.ui.widget.file_dialog_widget import FileDialogWidget
 from app.module.utility.exec_shortcut_utility import ShortcutExecutor
 from app.module.utility.get_shortcut_icon_utility import IconExtractor
-
 from app.module.service.launcher_service import LauncherService
 
 
-class LauncherPage(customtkinter.CTkFrame):
+class LauncherPage(customtkinter.CTkScrollableFrame):
     def __init__(self, master):
         super().__init__(master, corner_radius=0, fg_color="transparent")
         self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_columnconfigure(2, weight=1)
+        self.grid_columnconfigure(3, weight=1)
         self.setup()
 
     def setup(self):
+        # OSに応じて初期ディレクトリを設定
+        initial_dir = (
+            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs"
+            if os.name == "nt"
+            else os.path.expanduser("~")
+        )
 
-        # TODO initial_dirをlinuxにも対応させる
         kwargs = {
             "placeholder_text": "ランチャーに保存するショートカットを選択してください",
             "button_text": "ショートカットを選択",
@@ -26,57 +35,132 @@ class LauncherPage(customtkinter.CTkFrame):
             "command_button_text": "ショートカットを保存",
             "file_name": "ショートカット",
             "readable_file_types": "*.lnk",
-            "initial_dir": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs",
+            "initial_dir": initial_dir,
         }
 
         self.file_dialog = FileDialogWidget(master=self, **kwargs)
-        self.file_dialog.grid(row=0, column=0, padx=10, pady=20, sticky="ew")
+        self.file_dialog.grid(
+            row=0, column=0, columnspan=4, padx=10, pady=20, sticky="ew"
+        )
+
+        self.utility_frame = customtkinter.CTkFrame(
+            self, corner_radius=0, fg_color="transparent"
+        )
+        self.utility_frame.grid(
+            row=1, column=0, columnspan=4, padx=10, pady=10, sticky="ew"
+        )
 
         self.launcher_list = customtkinter.CTkFrame(
             self, corner_radius=0, fg_color="transparent"
         )
+        self.launcher_list.grid(
+            row=2, column=0, columnspan=4, padx=10, pady=20, sticky="ew"
+        )
+        # checkboxを使用して、アプリケーションの一括操作を実装したいが、ムズイのでいったん保留
+        # self.add_utility_buttons()
+
+        self.update_launcher_list()
+
+    def update_launcher_list(self):
+        """ランチャーリストを更新"""
+        # 既存のウィジェットをクリア
+        for widget in self.launcher_list.winfo_children():
+            widget.destroy()
 
         launcher_service = LauncherService()
         all_launcher_dict: dict[str, str] = launcher_service.get_all_launch_path()
 
         icon_extractor = IconExtractor()
         shortcut_executor = ShortcutExecutor()
-        for app_name, app_path in all_launcher_dict.items():
-            icon = icon_extractor.get_icon(app_path)
-            icon = ImageTk.PhotoImage(icon)
-            self.launcher_list = customtkinter.CTkButton(
-                master=self.launcher_list,
-                text=app_name,
-                image=icon,
-                compound="left",
-                command=lambda app_path=app_path: shortcut_executor.execute_shortcut(
-                    shortcut_path=app_path
-                ),
+
+        for i, (shortcut_name, shortcut_path) in enumerate(all_launcher_dict.items()):
+            # 行と列を計算
+            row = i // 2  # 2つのセットで1行
+            col = (i % 2) * 2  # 1セットごとに2列を占有
+
+            # ショートカットのアイコンを取得
+            pillow_image = icon_extractor.get_pillow_image(shortcut_path)
+            ctk_image = customtkinter.CTkImage(
+                light_image=pillow_image, dark_image=pillow_image, size=(32, 32)
+            )
+            delete_image = customtkinter.CTkImage(
+                light_image=Image.open(os.path.join(IMAGE_PATH, "delete_light.png")),
+                dark_image=Image.open(os.path.join(IMAGE_PATH, "delete_dark.png")),
+                size=(32, 32),
             )
 
-        self.launcher_list.grid(row=1, column=0, padx=10, pady=20, sticky="ew")
+            # ショートカットの実行ボタン
+            launch_button = customtkinter.CTkButton(
+                self.launcher_list,
+                text=shortcut_name,
+                image=ctk_image,
+                compound="left",
+                width=250,
+                command=lambda p=shortcut_path: shortcut_executor.execute_shortcut(
+                    shortcut_path=p
+                ),
+                anchor="center",
+            )
+            launch_button.grid(row=row, column=col, padx=20, pady=10, sticky="ew")
+
+            # ショートカットの削除ボタン
+            delete_button = customtkinter.CTkButton(
+                self.launcher_list,
+                text="削除",
+                image=delete_image,
+                compound="left",
+                command=lambda k=shortcut_name: self.delete_launcher(k),
+                anchor="center",
+            )
+            delete_button.grid(row=row, column=col + 1, padx=5, pady=10)
+
+    def add_utility_buttons(self):
+        """ランチャーリストの上部にスタート、停止、一括削除ボタンを追加"""
+        start_button_image = customtkinter.CTkImage(
+            light_image=Image.open(os.path.join(IMAGE_PATH, "start_light.png")),
+            dark_image=Image.open(os.path.join(IMAGE_PATH, "start_dark.png")),
+            size=(32, 32),
+        )
+        start_button = customtkinter.CTkButton(
+            self.utility_frame, image=start_button_image, text="Start"
+        )
+        start_button.grid(row=0, column=0, padx=5, pady=5)
+
+        stop_button_image = customtkinter.CTkImage(
+            light_image=Image.open(os.path.join(IMAGE_PATH, "stop_light.png")),
+            dark_image=Image.open(os.path.join(IMAGE_PATH, "stop_dark.png")),
+            size=(32, 32),
+        )
+        stop_button = customtkinter.CTkButton(
+            self.utility_frame, image=stop_button_image, text="Stop"
+        )
+        stop_button.grid(row=0, column=1, padx=5, pady=5)
+
+        delete_sweep_button_image = customtkinter.CTkImage(
+            light_image=Image.open(os.path.join(IMAGE_PATH, "delete_sweep_light.png")),
+            dark_image=Image.open(os.path.join(IMAGE_PATH, "delete_sweep_dark.png")),
+            size=(32, 32),
+        )
+        delete_sweep_button = customtkinter.CTkButton(
+            self.utility_frame, image=delete_sweep_button_image, text="Delete All"
+        )
+        delete_sweep_button.grid(row=0, column=2, padx=5, pady=5)
 
     def button_select_callback(self):
         file_path = self.file_dialog.textbox.get()
-        # file_pathで取得した最後の"/"以降の文字列を取得
-        app_name = file_path.split("/")[-1].split(".")[0]
+        # ファイルパスからファイル名を取得
+        app_name = os.path.splitext(os.path.basename(file_path))[0]
 
         launcher_service = LauncherService()
 
         if os.path.exists(file_path):
             launcher_service.save_launch_path(key=app_name, launch_app_path=file_path)
-            # テキストボックスをクリア
-            self.file_dialog.textbox.delete(0, tk.END)
+            self.update_launcher_list()  # ランチャーリストを更新
         else:
             raise FileNotFoundError(f"{file_path} not found")
 
-    def _delete_launcher(self, key: str):
-        """指定したランチャーを削除して、残りのランチャーを返す"""
+    def delete_launcher(self, key: str):
+        """指定したランチャーを削除してリストを更新"""
         launcher_service = LauncherService()
         launcher_service.delete_launch_path(key=key)
-        return launcher_service.get_all_launch_path()
-
-    def get_shortcut_icon(self, shortcut_path):
-        """ショートカットのアイコンを取得"""
-        icon_extractor = IconExtractor()
-        return icon_extractor.get_icon(shortcut_path)
+        self.update_launcher_list()  # ランチャーリストを更新
