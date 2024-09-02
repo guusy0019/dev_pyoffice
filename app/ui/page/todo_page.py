@@ -2,7 +2,7 @@ import customtkinter
 import tkinter as tk
 
 
-class ThirdPage(customtkinter.CTkFrame):
+class TodoPage(customtkinter.CTkFrame):
     def __init__(self, master):
         super().__init__(master, corner_radius=0, fg_color="transparent")
         self.grid_columnconfigure(0, weight=1)

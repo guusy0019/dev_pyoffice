@@ -31,3 +31,15 @@ class BaseCtkLayout(customtkinter.CTk):
             dark_image=Image.open(os.path.join(IMAGE_PATH, "launch_dark.png")),
             size=(20, 20),
         )
+
+        self.todo_icon = customtkinter.CTkImage(
+            light_image=Image.open(os.path.join(IMAGE_PATH, "todo_light.png")),
+            dark_image=Image.open(os.path.join(IMAGE_PATH, "todo_dark.png")),
+            size=(20, 20),
+        )
+
+        self.attendance_icon = customtkinter.CTkImage(
+            light_image=Image.open(os.path.join(IMAGE_PATH, "attendance_light.png")),
+            dark_image=Image.open(os.path.join(IMAGE_PATH, "attendance_dark.png")),
+            size=(20, 20),
+        )

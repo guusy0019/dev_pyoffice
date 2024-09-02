@@ -12,21 +12,29 @@ class AppRoutes:
         else:
             self.app_layout.home_frame.grid_forget()
 
-        if name == "frame_2":
-            self.app_layout.second_frame.grid(row=0, column=1, sticky="nsew")
+        if name == "launcher":
+            self.app_layout.launcher_frame.grid(row=0, column=1, sticky="nsew")
         else:
-            self.app_layout.second_frame.grid_forget()
+            self.app_layout.launcher_frame.grid_forget()
 
-        if name == "frame_3":
-            self.app_layout.third_frame.grid(row=0, column=1, sticky="nsew")
+        if name == "todo":
+            self.app_layout.todo_frame.grid(row=0, column=1, sticky="nsew")
         else:
-            self.app_layout.third_frame.grid_forget()
+            self.app_layout.todo_frame.grid_forget()
+
+        if name == "attendance":
+            self.app_layout.attendance_frame.grid(row=0, column=1, sticky="nsew")
+        else:
+            self.app_layout.attendance_frame.grid_forget()
 
     def home_button_event(self):
         self.select_frame_by_name("home")
 
     def frame_2_button_event(self):
-        self.select_frame_by_name("frame_2")
+        self.select_frame_by_name("launcher")
 
     def frame_3_button_event(self):
-        self.select_frame_by_name("frame_3")
+        self.select_frame_by_name("todo")
+
+    def attendance_button_event(self):
+        self.select_frame_by_name("attendance")

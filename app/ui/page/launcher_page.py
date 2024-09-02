@@ -21,12 +21,7 @@ class LauncherPage(customtkinter.CTkScrollableFrame):
         self.setup()
 
     def setup(self):
-        # OSに応じて初期ディレクトリを設定
-        initial_dir = (
-            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs"
-            if os.name == "nt"
-            else os.path.expanduser("~")
-        )
+        initial_dir = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs"
 
         kwargs = {
             "placeholder_text": "ランチャーに保存するショートカットを選択してください",
@@ -155,7 +150,9 @@ class LauncherPage(customtkinter.CTkScrollableFrame):
 
         if os.path.exists(file_path):
             launcher_service.save_launch_path(key=app_name, launch_app_path=file_path)
-            self.update_launcher_list()  # ランチャーリストを更新
+            # textをクリア
+            self.file_dialog.textbox.delete(0, tk.END)
+            self.update_launcher_list()
         else:
             raise FileNotFoundError(f"{file_path} not found")
 
@@ -163,4 +160,4 @@ class LauncherPage(customtkinter.CTkScrollableFrame):
         """指定したランチャーを削除してリストを更新"""
         launcher_service = LauncherService()
         launcher_service.delete_launch_path(key=key)
-        self.update_launcher_list()  # ランチャーリストを更新
+        self.update_launcher_list()
