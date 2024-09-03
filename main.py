@@ -1,5 +1,5 @@
 from app.ui.layout.layout import AppLayout
-from app.ui.route.router import AppRoutes
+from app.ui.router.router import AppRoutes
 
 
 def main():

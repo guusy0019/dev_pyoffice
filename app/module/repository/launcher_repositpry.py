@@ -23,10 +23,8 @@ class LauncherRepository:
                     # ファイルが壊れているか、空の場合は無視する
                     launch_data = {}
 
-        # 新しいキーと値を追加
         launch_data[key] = launch_app_path
 
-        # ファイルに書き戻す
         with open(self.save_path, "w") as f:
             json.dump(launch_data, f, indent=4)
 
