@@ -13,6 +13,7 @@ from app.ui.layout._base_ctk_layout import BaseCtkLayout
 
 from app.ui.widget.appearance_mode_widget import AppearanceModeWidget
 from app.ui.widget.scaling_option_widget import ScalingOptionWidget
+from app.ui.widget.themes_color_widget import ThemesColorWidget
 
 from app.ui.page.home_page import HomePage
 from app.ui.page.launcher_page import LauncherPage
@@ -105,11 +106,15 @@ class AppLayout(BaseCtkLayout):
 
         # 外観モードのウィジェットの配置
         self.appearance_mode_menu = AppearanceModeWidget(self.navigation_frame)
-        self.appearance_mode_menu.grid(row=7, column=0, padx=20, pady=20, sticky="s")
+        self.appearance_mode_menu.grid(row=7, column=0, padx=20, pady=(10, 20))
 
         # スケーリングのウィジェットの配置
         self.scaling_optionemenu = ScalingOptionWidget(self.navigation_frame)
         self.scaling_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 20))
+
+        # カラーテーマのウィジェットの配置
+        self.themes_color_menu = ThemesColorWidget(self.navigation_frame)
+        self.themes_color_menu.grid(row=9, column=0, padx=20, pady=(10, 20))
 
     def select_button(self, name):
 
