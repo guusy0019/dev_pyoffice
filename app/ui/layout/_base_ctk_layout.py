@@ -2,7 +2,7 @@ import os
 import customtkinter
 from PIL import Image
 
-from app.config.settings import IMAGE_PATH
+from app.config.settings import IMAGE_PATH, ICON_PATH
 from app.ui.layout.menu_layout import MenuLayout
 
 
@@ -15,6 +15,9 @@ class BaseCtkLayout(customtkinter.CTk):
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
+
+        # iconの設定
+        self.iconbitmap(os.path.join(ICON_PATH, "icon.ico"))
 
         # メニューバーを配置
         self.menu_layout = MenuLayout(self)

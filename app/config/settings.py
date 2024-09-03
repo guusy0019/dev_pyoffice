@@ -4,15 +4,10 @@ import platform
 # プロジェクトのルートディレクトリ main.pyがあるディレクトリ
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# OSに基づいた画像パスの設定（いる？）
-if platform.system() == "Windows":
-    IMAGE_PATH = os.path.join(BASE_DIR, "app\\assets\\images")
-    DATA_PATH = os.path.join(BASE_DIR, "app\\assets\\data")
-    LOG_FILE_PATH = os.path.join(BASE_DIR, "app\\logs\\app.log")
-else:
-    IMAGE_PATH = os.path.join(BASE_DIR, "app/assets/images")
-    DATA_PATH = os.path.join(BASE_DIR, "app/assets/data")
-    LOG_FILE_PATH = os.path.join(BASE_DIR, "app/logs/app.log")
+ICON_PATH = os.path.join(BASE_DIR, "app\\assets")
+IMAGE_PATH = os.path.join(BASE_DIR, "app\\assets\\images")
+DATA_PATH = os.path.join(BASE_DIR, "app\\assets\\data")
+LOG_FILE_PATH = os.path.join(BASE_DIR, "app\\logs\\app.log")
 
 
 # ("ライトモード", "ダークモード")
