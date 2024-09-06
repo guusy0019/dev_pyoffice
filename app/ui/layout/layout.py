@@ -26,6 +26,9 @@ class AppLayout(BaseCtkLayout):
         super().__init__()
         self.route_handler = route_handler
 
+        # TODO 設定ページでテーマを変更できるようにする
+        # customtkinter.set_default_color_theme("blue")
+
         # Load images
         self.large_test_image = customtkinter.CTkImage(
             Image.open(os.path.join(IMAGE_PATH, "large_test_image.png")),
@@ -112,9 +115,9 @@ class AppLayout(BaseCtkLayout):
         self.scaling_optionemenu = ScalingOptionWidget(self.navigation_frame)
         self.scaling_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 20))
 
-        # カラーテーマのウィジェットの配置
-        self.themes_color_menu = ThemesColorWidget(self.navigation_frame)
-        self.themes_color_menu.grid(row=9, column=0, padx=20, pady=(10, 20))
+        # # テーマカラーのウィジェットの配置
+        # self.themes_color_widget = ThemesColorWidget(self)
+        # self.themes_color_widget.grid(row=9, column=0, padx=20, pady=(10, 20))
 
     def select_button(self, name):
 

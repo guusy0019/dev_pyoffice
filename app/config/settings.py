@@ -1,5 +1,4 @@
 import os
-import platform
 
 # プロジェクトのルートディレクトリ main.pyがあるディレクトリ
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -9,7 +8,11 @@ IMAGE_PATH = os.path.join(BASE_DIR, "app\\assets\\images")
 DATA_PATH = os.path.join(BASE_DIR, "app\\assets\\data")
 LOG_FILE_PATH = os.path.join(BASE_DIR, "app\\logs\\app.log")
 
+# タイムゾーン
+TIMEZONE = "Asia/Tokyo"
 
+
+# 思ったけどこれlayoutの基底クラスじゃね？
 # ("ライトモード", "ダークモード")
 TEXT_COLOR = ("gray10", "gray90")
 
