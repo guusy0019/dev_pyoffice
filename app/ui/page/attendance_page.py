@@ -20,7 +20,7 @@ class AttendancePage(customtkinter.CTkFrame):
             placeholder_text="出勤シートを選択してください",
             button_text="シートを選択",
             custom_command=self.button_select_callback,
-            command_button_text="ファイルを開く",
+            command_button_text="ファイルを選択",
             file_name="出勤シート",
             readable_file_types="*.xlsx",
             initial_dir=initial_dir,
@@ -29,8 +29,10 @@ class AttendancePage(customtkinter.CTkFrame):
 
         # 出勤シートが保存されているか確認
         attendance_service = AttendanceService()
-        if attendance_service.get_attendance_path():
-            self.file_dialog.textbox.insert(0, attendance_service.get_attendance_path())
+        if attendance_service.get_initial_attendance_path():
+            self.file_dialog.textbox.insert(
+                0, attendance_service.get_initial_attendance_path()
+            )
 
     def button_select_callback(self):
         file_path = self.file_dialog.textbox.get()
@@ -38,7 +40,7 @@ class AttendancePage(customtkinter.CTkFrame):
         attendance_service = AttendanceService()
 
         if file_path:
-            attendance_service.save_attendance_path(file_path)
+            attendance_service.save_attendance_path(attendance_path=file_path)
             self.file_dialog.textbox.delete(first_index=0, last_index="end")
 
         else:

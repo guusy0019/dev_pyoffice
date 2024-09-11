@@ -1,83 +1,85 @@
 from datetime import datetime
-
+from pathlib import Path
 from app.module.repository.attendance_repository import AttendanceRepository
+from app.module.utility.xlsx_utility import XlsxUtility
 
 
 class AttendanceUsecase:
+    def __init__(self):
+        self.this_year: str = datetime.now().strftime("%Y")
+        self.last_year: str = str(int(self.this_year) - 1)
+        self.attendance_repository = AttendanceRepository()
 
-    def save_attendance_path(self, *, attendance_path: str):
-        """keyを一定にしたいかつ年度ごとのdateを入れたいので、パスからキーを生成して保存する
-        example: C:\\Users\\matty\\doc\\（sample）出勤簿.xlsx -> 2024（sample）出勤簿.xlsx
-        key -> 2024（sample）出勤簿.xlsx
-        path -> C:\\Users\\matty\\doc\\2024（sample）出勤簿.xlsx
-
-        """
-        add_date_path = self._add_date_this_year(attendance_path)
-        add_date_key = self._gen_key_name_by_attendance_path(attendance_path)
-        attendance_repository = AttendanceRepository()
-        attendance_repository.save_attendance_path(
-            key=add_date_key, attendance_path=add_date_path
-        )
+    def save_attendance_path(self, *, key=None, attendance_path: str):
+        """パスから年度を含むキーを生成して保存する"""
+        if key is None:
+            # 今年度のパスとキーを生成
+            updated_path = self._add_year_to_file_name(attendance_path, self.this_year)
+            # 実際にワークブックのファイル名を変更する
+            # こうしないと、一つのworkbookに12ヶ月 * 年度分のデータが保存されてしまうので、年度事に自動で作成する
+            self._rename_file_name(attendance_path, updated_path.name)
+            updated_key = updated_path.name
+            self.attendance_repository.save_attendance_path(
+                key=str(updated_key), attendance_path=str(updated_path)
+            )
+        else:
+            self.attendance_repository.save_attendance_path(
+                key=key, attendance_path=attendance_path
+            )
 
     def get_attendance_path(self, *, key: str) -> str:
-        attendance_repository = AttendanceRepository()
-        is_valid = self._validate_input_str_including_year(key)
-        if is_valid:
-            return attendance_repository.get_attendance_path(key=key)
+        """キーから出勤簿のパスを取得する"""
+        if self._validate_key_including_year(key):
+            return self.attendance_repository.get_attendance_path(key=key)
         else:
-            raise ValueError("key is not including year")
+            raise ValueError("キーには20xxの年度が含まれていません")
 
     def get_initial_attendance_path(self) -> str:
-        """初期読み込み時に今年の出勤簿のパスを取得する
-        これをuiのコンストラクタで読み込んでもしNoneなら、textで
-        「今年度の出勤.xlsxが見つからないので登録してくださいみたいな感じで表示やね
-        """
-        this_year = datetime.now().strftime("%Y")
-        attendance_repository = AttendanceRepository()
-        attendance_path = attendance_repository.get_attendance_path_by_year(
-            year=this_year
+        """今年の出勤簿のパスを取得し、なければ昨年のパスを基準に作成"""
+        attendance_path = self.attendance_repository.get_attendance_path_by_year(
+            year=self.this_year
         )
+
         if attendance_path:
             return attendance_path
         else:
-            last_year = str(int(this_year) - 1)
-            last_year_attendance: str = self._find_last_year_attendance_path(last_year)
-
-    def _find_last_year_attendance_path(self, last_year) -> str:
-        """昨年登録している場合は、そのパスを基準にファイルを作っちゃおう！"""
-        attendance_repository = AttendanceRepository()
-        attendance_path = attendance_repository.get_attendance_path_by_year(
-            year=last_year
-        )
-        if attendance_path:
-            pass
-        else:
-            return ""
+            last_year_path = self._find_attendance_path_by_year(self.last_year)
+            if last_year_path:
+                # 昨年のパスを元に今年度のパスを生成
+                updated_path = self._add_year_to_file_name(
+                    last_year_path, self.this_year
+                )
+                XlsxUtility().save_workbook(str(updated_path))
+                return str(updated_path)
+            else:
+                # 昨年のパスが見つからなかった場合、UI側で指定させる
+                print("昨年度の出勤簿パスが見つかりません。")
+                return ""
 
     def delete_attendance_path(self, *, key: str) -> None:
-        attendance_repository = AttendanceRepository()
-        attendance_repository.delete_attendance_path(key=key)
+        """指定されたキーの出勤簿パスを削除する"""
+        self.attendance_repository.delete_attendance_path(key=key)
 
-    def _add_date_this_year(self, path: str) -> str:
-        """パスの先頭に年度を追加する
-        例）（sample）出勤簿.xlsx -> 2024（sample）出勤簿.xlsx
-        """
-        this_year = datetime.now().strftime("%Y")
-        return f"{this_year}{path}"
+    def _find_attendance_path_by_year(self, year: str) -> str:
+        """特定の年度の出勤簿パスを取得"""
+        return self.attendance_repository.get_attendance_path_by_year(year=year) or ""
 
-    def _gen_key_name_by_attendance_path(self, attendance_path: str) -> str:
-        """最後のパスから先頭に今年度をプラスしてキー名を生成する
-        例）（sample）出勤簿.xlsx -> 2024（sample）出勤簿.xlsx
-        """
-        plane_file_name: str = attendance_path.split("\\")[-1]
+    def _add_year_to_file_name(self, path: str, year: str) -> Path:
+        """パスのファイル名の先頭に指定された年度を追加したパスを返す"""
+        path_obj = Path(path)
+        file_name = path_obj.name
+        updated_file_name = f"{year}{file_name}"
+        return path_obj.with_name(updated_file_name)
 
-        # ファイル名の先頭に%Y形式で年月を追加
-        this_year = datetime.now().strftime("%Y")
-        return f"{this_year}{plane_file_name}"
+    def _rename_file_name(self, path: str, new_name: str) -> None:
+        """パスのファイル名を変更したパスを返す"""
+        path_obj = Path(path)
+        # 新しいフルパスを作成
+        new_path = path_obj.with_name(new_name)
+        # ファイル名を変更
+        path_obj.rename(new_path)
+        return None
 
-    def _validate_input_str_including_year(self, input_str: str) -> bool:
-        """文字列の先頭が20から始まるかどうかを判定する
-        2100年以降は知りません
-        まあ、そのころには、pythonも終了でしょということで。
-        """
-        return input_str.startswith("20")
+    def _validate_key_including_year(self, key: str) -> bool:
+        """キーが20xxで始まるかどうかを確認"""
+        return key.startswith("20")

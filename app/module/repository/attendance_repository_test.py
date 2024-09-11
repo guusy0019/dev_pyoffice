@@ -29,11 +29,10 @@ class TestAttendanceRepository(unittest.TestCase):
         self.assertEqual(data, self.attendance_path)
 
     def test_get_attendance_path_by_year(self):
-        test_year = "2024"
-        key, value = self.attendance_repository.get_attendance_path_by_year(
-            year=test_year
+        attendance_path = self.attendance_repository.get_attendance_path_by_year(
+            year="2024"
         )
-        return key, value
+        self.assertEqual(attendance_path, self.attendance_path)
 
     def test_delete_attendance_path(self):
         self.attendance_repository.save_attendance_path(

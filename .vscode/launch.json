@@ -1,0 +1,11 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "python customtkinter program",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",  // ワークスペースフォルダのapp.jsを実行
+        }
+    ]
+}

@@ -52,7 +52,7 @@ class LauncherPage(customtkinter.CTkScrollableFrame):
             row=2, column=0, columnspan=4, padx=10, pady=20, sticky="ew"
         )
         # checkboxを使用して、アプリケーションの一括操作を実装したいが、ムズイのでいったん保留
-        # self.add_utility_buttons()
+        self.add_utility_buttons()
 
         self.update_launcher_list()
 

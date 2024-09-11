@@ -1,6 +1,5 @@
 import json
-import os
-from datetime import datetime
+from pathlib import Path
 
 from app.config.settings import DATA_PATH
 
@@ -11,13 +10,14 @@ class AttendanceRepository:
     またこれを取り出す用のキーも先頭に年度を入れる
     """
 
-    attendance_xlsx_path = os.path.join(DATA_PATH, "attendance_app.json")
+    repository_json_path = Path(DATA_PATH) / "attendance_app.json"
 
-    def save_attendance_path(self, *, key, attendance_path: str) -> None:
+    def save_attendance_path(self, *, key: str, attendance_path: str) -> None:
         attendance_data = {}
+        file_path = Path(attendance_path)
 
-        if os.path.exists(self.attendance_xlsx_path):
-            with open(self.attendance_xlsx_path, "r") as f:
+        if file_path.exists():
+            with open(self.repository_json_path, "r") as f:
                 try:
                     attendance_data = json.load(f)
                 except json.JSONDecodeError:
@@ -25,12 +25,12 @@ class AttendanceRepository:
 
         attendance_data[key] = attendance_path
 
-        with open(self.attendance_xlsx_path, "w") as f:
+        with open(self.repository_json_path, "w") as f:
             json.dump(attendance_data, f, indent=4)
 
     def get_attendance_path(self, *, key: str) -> str:
-        if os.path.exists(self.attendance_xlsx_path):
-            with open(self.attendance_xlsx_path, "r") as f:
+        if self.repository_json_path.exists():
+            with open(self.repository_json_path, "r") as f:
                 try:
                     attendance_data: dict[str, str] = json.load(f)
                     return attendance_data.get(key, "")
@@ -38,23 +38,25 @@ class AttendanceRepository:
                     return ""
 
     def get_attendance_path_by_year(self, *, year) -> str:
-        if os.path.exists(self.attendance_xlsx_path):
-            with open(self.attendance_xlsx_path, "r") as f:
+        if self.repository_json_path.exists():
+            with open(self.repository_json_path, "r") as f:
                 try:
                     attendance_data: dict[str, str] = json.load(f)
-                    for key, value in attendance_data.items():
-                        if year in key:
-                            return key, value
-                except json.JSONDecodeError:
+                    for k in attendance_data.keys():
+                        if k.startswith(year):
+                            return attendance_data[k]
+                except Exception:
+                    # ファイルが読み込めない場合は空文字を返す
                     return ""
 
     def delete_attendance_path(self, *, key: str) -> None:
-        if os.path.exists(self.attendance_xlsx_path):
-            with open(self.attendance_xlsx_path, "r") as f:
+        file_path = Path(self.repository_json_path)
+        if file_path.exists():
+            with open(self.repository_json_path, "r") as f:
                 try:
                     attendance_data = json.load(f)
                     attendance_data.pop(key, None)
-                    with open(self.attendance_xlsx_path, "w") as f:
+                    with open(self.repository_json_path, "w") as f:
                         json.dump(attendance_data, f, indent=4)
                 except json.JSONDecodeError:
                     pass

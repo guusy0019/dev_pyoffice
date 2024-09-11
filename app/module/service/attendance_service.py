@@ -9,11 +9,11 @@ class AttendanceService:
 
     def get_attendance_path(self, *, key: str) -> str:
         attendance_usecase = AttendanceUsecase()
-        if key is None:
-            return attendance_usecase.()
-        
-        
-        # return attendance_usecase.get_attendance_path(key=key)
+        return attendance_usecase.get_attendance_path(key=key)
+
+    def get_initial_attendance_path(self) -> str:
+        attendance_usecase = AttendanceUsecase()
+        return attendance_usecase.get_initial_attendance_path()
 
     def delete_attendance_path(self, *, key: str) -> None:
         attendance_usecase = AttendanceUsecase()
