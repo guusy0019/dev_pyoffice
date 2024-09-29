@@ -1,6 +1,6 @@
 from datetime import datetime
 from pathlib import Path
-from app.module.repository.attendance_repository import AttendanceRepository
+from app.module.infrastructure.repository.attendance_repository import AttendanceRepository
 from app.module.utility.xlsx_utility import XlsxUtility
 
 

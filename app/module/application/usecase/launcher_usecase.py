@@ -1,4 +1,4 @@
-from app.module.repository.launcher_repositpry import LauncherRepository
+from app.module.infrastructure.repository.launcher_repositpry import LauncherRepository
 
 
 class LauncherUsecase:

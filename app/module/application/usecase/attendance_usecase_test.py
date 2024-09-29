@@ -1,6 +1,6 @@
 import unittest
 from pathlib import Path
-from app.module.usecase.attendance_usecase import AttendanceUsecase
+from app.module.application.usecase.attendance_usecase import AttendanceUsecase
 from app.module.utility.date_utility import DateUtility
 
 

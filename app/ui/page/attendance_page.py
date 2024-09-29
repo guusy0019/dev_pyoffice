@@ -3,7 +3,7 @@ import customtkinter
 
 from app.ui.widget.file_dialog_widget import FileDialogWidget
 
-from app.module.service.attendance_service import AttendanceService
+from app.module.application.usecase.attendance_usecase import AttendanceUsecase
 
 
 class AttendancePage(customtkinter.CTkFrame):
@@ -28,7 +28,7 @@ class AttendancePage(customtkinter.CTkFrame):
         self.file_dialog.grid(row=0, column=0, padx=10, pady=20, sticky="ew")
 
         # 出勤シートが保存されているか確認
-        attendance_service = AttendanceService()
+        attendance_service = AttendanceUsecase()
         if attendance_service.get_initial_attendance_path():
             self.file_dialog.textbox.insert(
                 0, attendance_service.get_initial_attendance_path()
@@ -37,7 +37,7 @@ class AttendancePage(customtkinter.CTkFrame):
     def button_select_callback(self):
         file_path = self.file_dialog.textbox.get()
 
-        attendance_service = AttendanceService()
+        attendance_service = AttendanceUsecase()
 
         if file_path:
             attendance_service.save_attendance_path(attendance_path=file_path)

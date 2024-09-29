@@ -1,6 +1,6 @@
 import os
 import tkinter as tk
-from PIL import Image, ImageTk
+from PIL import Image
 import customtkinter
 
 from app.config.settings import IMAGE_PATH
@@ -8,7 +8,7 @@ from app.config.settings import IMAGE_PATH
 from app.ui.widget.file_dialog_widget import FileDialogWidget
 from app.module.utility.exec_shortcut_utility import ShortcutExecutor
 from app.module.utility.get_shortcut_icon_utility import IconExtractor
-from app.module.service.launcher_service import LauncherService
+from app.module.application.usecase.launcher_usecase import LauncherUsecase
 
 
 class LauncherPage(customtkinter.CTkScrollableFrame):
@@ -62,7 +62,7 @@ class LauncherPage(customtkinter.CTkScrollableFrame):
         for widget in self.launcher_list.winfo_children():
             widget.destroy()
 
-        launcher_service = LauncherService()
+        launcher_service = LauncherUsecase()
         all_launcher_dict: dict[str, str] = launcher_service.get_all_launch_path()
 
         icon_extractor = IconExtractor()
@@ -146,7 +146,7 @@ class LauncherPage(customtkinter.CTkScrollableFrame):
         # ファイルパスからファイル名を取得
         app_name = os.path.splitext(os.path.basename(file_path))[0]
 
-        launcher_service = LauncherService()
+        launcher_service = LauncherUsecase()
 
         if os.path.exists(file_path):
             launcher_service.save_launch_path(key=app_name, launch_app_path=file_path)
@@ -158,6 +158,6 @@ class LauncherPage(customtkinter.CTkScrollableFrame):
 
     def delete_launcher(self, key: str):
         """指定したランチャーを削除してリストを更新"""
-        launcher_service = LauncherService()
+        launcher_service = LauncherUsecase()
         launcher_service.delete_launch_path(key=key)
         self.update_launcher_list()

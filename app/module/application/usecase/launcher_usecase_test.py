@@ -1,5 +1,5 @@
 import unittest
-from app.module.usecase.launcher_usecase import LauncherUsecase
+from app.module.application.usecase.launcher_usecase import LauncherUsecase
 
 
 class TestLauncherUseCase(unittest.TestCase):
