@@ -1,14 +1,15 @@
 from datetime import datetime
 from pathlib import Path
-from app.module.infrastructure.repository.attendance_repository import AttendanceRepository
+from app.module.application.interface.attendance_interface import AttendanceRepositoryInterface
+# from app.module.infrastructure.repository.attendance_repository import AttendanceRepository
 from app.module.utility.xlsx_utility import XlsxUtility
 
 
 class AttendanceUsecase:
-    def __init__(self):
+    def __init__(self, attendance_repository: AttendanceRepositoryInterface):
         self.this_year: str = datetime.now().strftime("%Y")
         self.last_year: str = str(int(self.this_year) - 1)
-        self.attendance_repository = AttendanceRepository()
+        self.attendance_repository = attendance_repository
 
     def save_attendance_path(self, *, key=None, attendance_path: str):
         """パスから年度を含むキーを生成して保存する"""

@@ -6,15 +6,12 @@ from app.config.settings import (
     TEXT_COLOR,
     HOVER_COLOR,
     FG_COLOR,
-    FONTS,
 )
 from app.ui.layout._base_ctk_layout import BaseCtkLayout
 from app.ui.page.home_page import HomePage
 from app.ui.page.launcher_page import LauncherPage
 from app.ui.page.todo_page import TodoPage
 from app.ui.page.attendance_page import AttendancePage
-from app.ui.widget.appearance_mode_widget import AppearanceModeWidget
-from app.ui.widget.scaling_option_widget import ScalingOptionWidget
 
 class AppLayout(BaseCtkLayout):
     def __init__(self):
@@ -40,10 +37,6 @@ class AppLayout(BaseCtkLayout):
             "todo": self.todo_frame,
             "attendance": self.attendance_frame,
         }
-
-        self.navigation_frame = customtkinter.CTkFrame(self, corner_radius=0)
-        self.navigation_frame.grid(row=0, column=0, sticky="nsew")
-        self.navigation_frame.grid_rowconfigure(5, weight=1)
 
         self.button_info_list = [
             {"name": "home", "text": "ホーム", "icon": self.home_icon},
@@ -71,15 +64,6 @@ class AppLayout(BaseCtkLayout):
             button.grid(row=i, column=0, sticky="ew")
             self.buttons[info["name"]] = button
 
-        # 外観モードのウィジェットの配置
-        self.appearance_mode_menu = AppearanceModeWidget(self.navigation_frame)
-        self.appearance_mode_menu.grid(row=7, column=0, padx=20, pady=(10, 20))
-
-        # スケーリングのウィジェットの配置
-        self.scaling_optionemenu = ScalingOptionWidget(self.navigation_frame)
-        self.scaling_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 20))
-
-        # 初期フレームの設定
         self.select_frame_by_name("home")
 
     def select_frame_by_name(self, name):

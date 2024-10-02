@@ -3,11 +3,13 @@ import os
 
 from app.config.settings import DATA_PATH
 
+from app.module.application.interface.launcher_interface import LauncherRepositoryInterface
 
-class LauncherRepository:
+
+class LauncherRepository(LauncherRepositoryInterface):
     save_path = os.path.join(DATA_PATH, "launcher_app.json")
 
-    def save_launch_path(self, *, key: str, launch_app_path: str):
+    def save_launcher_path(self, *, key: str, launch_app_path: str):
         launch_data = {}
 
         # 拡張子がショートカットかどうかを確認
@@ -28,7 +30,7 @@ class LauncherRepository:
         with open(self.save_path, "w") as f:
             json.dump(launch_data, f, indent=4)
 
-    def get_launch_path(self, *, key: str) -> str:
+    def get_launcher_path(self, *, key: str) -> str:
 
         if os.path.exists(self.save_path):
             with open(self.save_path, "r") as f:
@@ -39,7 +41,7 @@ class LauncherRepository:
                 except json.JSONDecodeError:
                     return ""
 
-    def get_all_launch_path(self) -> dict[str, str]:
+    def get_all_launcher_path(self) -> dict[str, str]:
         if os.path.exists(self.save_path):
             with open(self.save_path, "r") as f:
                 try:
@@ -48,7 +50,7 @@ class LauncherRepository:
                     return {}
         return {}
 
-    def delete_launch_path(self, *, key: str) -> None:
+    def delete_launcher_path(self, *, key: str) -> None:
         if os.path.exists(self.save_path):
             with open(self.save_path, "r") as f:
                 try:

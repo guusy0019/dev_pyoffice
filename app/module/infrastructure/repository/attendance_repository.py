@@ -2,9 +2,10 @@ import json
 from pathlib import Path
 
 from app.config.settings import DATA_PATH
+from app.module.application.interface.attendance_interface import AttendanceRepositoryInterface
 
 
-class AttendanceRepository:
+class AttendanceRepository(AttendanceRepositoryInterface):
     """出勤簿のパスのリポジトリーを担う
     保存するファイル名の先頭にはかならず、年度を入れて保存する
     またこれを取り出す用のキーも先頭に年度を入れる

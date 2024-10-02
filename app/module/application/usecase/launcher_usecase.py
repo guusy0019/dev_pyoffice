@@ -1,20 +1,24 @@
 from app.module.infrastructure.repository.launcher_repositpry import LauncherRepository
+from app.module.application.interface.launcher_interface import LauncherRepositoryInterface
 
 
 class LauncherUsecase:
 
-    def save_launch_path(self, *, key: str, launch_app_path: str):
-        launcer_repository = LauncherRepository()
-        launcer_repository.save_launch_path(key=key, launch_app_path=launch_app_path)
+    def __init__(self, launcher_repository: LauncherRepository):
+        self.launcher_repository = launcher_repository
 
-    def get_launch_path(self, *, key: str) -> str:
+    def save_launcher_path(self, *, key: str, launch_app_path: str):
         launcer_repository = LauncherRepository()
-        return launcer_repository.get_launch_path(key=key)
+        launcer_repository.save_launcher_path(key=key, launch_app_path=launch_app_path)
 
-    def get_all_launch_path(self) -> dict[str, str]:
+    def get_launcher_path(self, *, key: str) -> str:
         launcer_repository = LauncherRepository()
-        return launcer_repository.get_all_launch_path()
+        return launcer_repository.get_launcher_path(key=key)
 
-    def delete_launch_path(self, *, key: str) -> None:
+    def get_all_launcher_path(self) -> dict[str, str]:
         launcer_repository = LauncherRepository()
-        launcer_repository.delete_launch_path(key=key)
+        return launcer_repository.get_all_launcher_path()
+
+    def delete_launcher_path(self, *, key: str) -> None:
+        launcer_repository = LauncherRepository()
+        launcer_repository.delete_launcher_path(key=key)
